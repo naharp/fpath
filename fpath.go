@@ -167,6 +167,11 @@ func (p *Path) IsFile() bool{
 	return s != nil && !s.IsDir()
 }
 
+// HasSuffix checks if path ends with suffix
+func (p *Path) HasSuffix(suffix string) bool{
+	return strings.HasSuffix(p.String(), suffix)
+}
+
 // ReadLink reads the a symlink
 func (p *Path) ReadLink() *Path  {
 	src, err := os.Readlink(p.String())
