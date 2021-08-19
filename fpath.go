@@ -209,6 +209,13 @@ func (p *Path) MkDir(perm os.FileMode, parents bool) error {
 	}
 }
 
+// SubDir creates a subdirectory and returns the path
+func (p *Path) SubDir(dir string) *Path {
+	sd := Join(p.String(), dir)
+	sd.MkDir(0755, true)
+	return sd
+}
+
 // ReadDir returns all files in the path
 func (p *Path) ReadDir() []os.DirEntry  {
 	files, err := os.ReadDir(p.String())
