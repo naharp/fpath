@@ -20,7 +20,6 @@ func Watch(e EventMap) *fsnotify.Watcher {
 		log.Fatal(err)
 	}
 	defer watcher.Close()
-	done := make(chan bool)
 	go func() {
 		mtimes := map[string] time.Time{}
 		for {
