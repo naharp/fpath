@@ -19,7 +19,13 @@ func Watch(e EventMap) *fsnotify.Watcher {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer watcher.Close()
+	//defer watcher.Close()
+	closer := make(chan bool)
+	go func() {
+		<-closer
+		log.Println("Closed")
+		watcher.Close()
+	}()
 	go func() {
 		mtimes := map[string] time.Time{}
 		for {
