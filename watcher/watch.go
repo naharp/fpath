@@ -43,7 +43,7 @@ func Watch(e EventMap) *fsnotify.Watcher {
 				}
 			case err := <-watcher.Errors:
 				// Nothing to do with errors
-				log.Println(err)
+				log.Fatal(err)
 			}
 		}
 	}()
