@@ -14,7 +14,7 @@ type Handler func(action string, target fpath.Path) bool
 
 type EventMap map[string] Handler
 
-func Watch(p *fpath.Path, e EventMap) {
+func Watch(e EventMap) *fsnotify.Watcher {
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
 		log.Fatal(err)
@@ -48,9 +48,7 @@ func Watch(p *fpath.Path, e EventMap) {
 			}
 		}
 	}()
-	log.Println("Listening for changes from", p)
-	watcher.Add(p.String())
-	<- done
+	return watcher
 }
 
 //
