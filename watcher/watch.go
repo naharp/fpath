@@ -14,24 +14,19 @@ type Handler func(action string, target fpath.Path) bool
 
 type EventMap map[string] Handler
 
-func Watch(e EventMap) *fsnotify.Watcher {
+func Watch(eventMap EventMap) *fsnotify.Watcher {
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
 		log.Fatal(err)
 	}
 	//defer watcher.Close()
-	closer := make(chan bool)
-	go func() {
-		<-closer
-		log.Println("Closed")
-		watcher.Close()
-	}()
+
 	go func() {
 		mtimes := map[string] time.Time{}
 		for {
 			select {
 			case ev := <-watcher.Events:
-				for pattern, handler := range e {
+				for pattern, handler := range eventMap {
 					match, err := path.Match(pattern, path.Base(ev.Name))
 					if match && err == nil {
 						fp := fpath.Path(ev.Name)
