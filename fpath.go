@@ -299,14 +299,14 @@ func (p *Path) LockFile() (*os.File, error){
 	if err != nil {
 		return nil, err
 	}
-	spec := syscall.Flock_t{
+	flock := syscall.Flock_t{
 		Type:   syscall.F_WRLCK,
-		Whence: int16(os.SEEK_SET),
+		Whence: io.SeekStart,
 		Start:  0,
-		Len:    0, // 0 means to lock the entire file.
+		Len:    0,
 		Pid:    int32(os.Getpid()),
 	}
-	if err := syscall.FcntlFlock(f.Fd(), syscall.F_SETLK, &spec); err != nil {
+	if err := syscall.FcntlFlock(f.Fd(), syscall.F_SETLK, &flock); err != nil {
 		f.Close()
 		return nil, err
 	}
