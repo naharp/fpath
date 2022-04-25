@@ -1,4 +1,4 @@
-module g`ithub.com/naharp/fpath
+module github.com/naharp/fpath
 
 go 1.16
 
