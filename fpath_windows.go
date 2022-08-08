@@ -2,6 +2,7 @@ package fpath
 
 import (
 	"errors"
+	"os"
 )
 
 func LockFile(path string) (*os.File, error) {
