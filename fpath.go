@@ -12,7 +12,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"syscall"
 )
 
 const (
@@ -296,23 +295,7 @@ func (p *Path) DownloadFrom(url string) error {
 }
 
 func (p *Path) LockFile() (*os.File, error) {
-	f, err := os.Create(p.String())
-	if err != nil {
-		return nil, err
-	}
-	flock := syscall.Flock_t{
-		Type:   syscall.F_WRLCK,
-		Whence: io.SeekStart,
-		Start:  0,
-		Len:    0,
-		Pid:    int32(os.Getpid()),
-	}
-	if err := syscall.FcntlFlock(f.Fd(), syscall.F_SETLK, &flock); err != nil {
-		f.Close()
-		return nil, err
-	}
-
-	return f, nil
+	return LockFile(p.String())
 }
 
 type OpenFlag uint32
