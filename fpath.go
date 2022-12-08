@@ -58,6 +58,9 @@ func FromUrl(url string, target ...string) *Path {
 
 // String returns path as string
 func (p *Path) String() string {
+	if p == nil {
+		return ""
+	}
 	return string(*p)
 }
 
