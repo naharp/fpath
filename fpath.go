@@ -10,6 +10,7 @@ import (
 	"path"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -29,7 +30,7 @@ func New(path string) *Path {
 
 // Join returns a new path by joining multiple Path/string elements
 func Join(elem ...string) *Path {
-	return New(path.Join(elem...))
+	return New(filepath.Join(elem...))
 }
 
 // Expand returns a new path with expanded Environment
@@ -263,6 +264,9 @@ func (p *Path) Find(regex string, handler func(Path)) bool {
 		return false
 	}
 	files := p.ReadDir()
+	sort.Slice(files, func(i, j int) bool {
+		return files[i].Name() < files[j].Name()
+	})
 	dir := p.String()
 	for _, f := range files {
 		fn := f.Name()
@@ -274,7 +278,7 @@ func (p *Path) Find(regex string, handler func(Path)) bool {
 }
 
 func (p *Path) Match(pattern string) bool {
-	match, err := path.Match(pattern, p.String())
+	match, err := filepath.Match(pattern, p.String())
 	return err == nil && match
 }
 
@@ -310,6 +314,13 @@ const (
 	ForAppending = OpenFlag(os.O_RDWR | os.O_CREATE | os.O_APPEND)
 	ForNewWrite  = OpenFlag(os.O_WRONLY | os.O_CREATE | os.O_TRUNC)
 )
+
+/*
+Open()
+OpenRW()
+Create()
+CreateOrAppend()
+*/
 
 // ReadBytes reads the contents of file as bytes
 func (p *Path) Open(mode OpenFlag) (*os.File, error) {
